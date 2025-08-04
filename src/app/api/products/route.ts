@@ -12,6 +12,9 @@ async function findCategoryByName(categoryName: string) {
     cleanName.replace(/\s+/g, ' '), // إزالة المسافات المتعددة
     cleanName.replace(/\s+$/, ''), // إزالة المسافات من النهاية
     cleanName.replace(/^\s+/, ''), // إزالة المسافات من البداية
+    cleanName + ' ', // إضافة مسافة في النهاية
+    cleanName.replace(/\s+$/, '') + ' ', // إزالة المسافات من النهاية ثم إضافة مسافة
+    cleanName.replace(/\s+$/, '') + '  ', // إضافة مسافتين في النهاية
   ];
 
   for (const attempt of searchAttempts) {
