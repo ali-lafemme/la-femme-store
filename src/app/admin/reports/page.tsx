@@ -4,11 +4,16 @@ import SalesReport from '@/components/admin/reports/SalesReport';
 import ProductsReport from '@/components/admin/reports/ProductsReport';
 import CustomersReport from '@/components/admin/reports/CustomersReport';
 import RevenueChart from '@/components/admin/reports/RevenueChart';
+import type { Viewport } from 'next';
 
 export const metadata = {
   title: 'التقارير - لوحة التحكم',
   description: 'تقارير شاملة للمبيعات والمنتجات والعملاء',
-  viewport: 'width=device-width, initial-scale=1',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function ReportsPage() {
