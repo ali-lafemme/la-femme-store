@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     }
 
     // جلب الطلبات مع العلاقات
-    const orders = await prisma.order.findMany({
+    const orders = await (prisma as any).order.findMany({
       where,
       include: {
         user: {
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
     });
 
     // جلب العدد الإجمالي للطلبات
-    const total = await prisma.order.count({ where });
+    const total = await (prisma as any).order.count({ where });
 
     return NextResponse.json({
       success: true,
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     }
 
     // التحقق من وجود المستخدم
-    const user = await prisma.user.findUnique({
+    const user = await (prisma as any).user.findUnique({
       where: { id: userId },
     });
 
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     }
 
     // إنشاء الطلب مع العناصر
-    const order = await prisma.order.create({
+    const order = await (prisma as any).order.create({
       data: {
         userId,
         totalAmount,

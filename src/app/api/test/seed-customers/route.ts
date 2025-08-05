@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { Role } from '@prisma/client';
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,42 +10,42 @@ export async function POST(request: NextRequest) {
         name: 'أحمد محمد',
         phone: '0501234567',
         address: 'الرياض، شارع الملك فهد',
-        role: 'CUSTOMER' as Role,
+        role: 'CUSTOMER',
       },
       {
         email: 'fatima@example.com',
         name: 'فاطمة علي',
         phone: '0502345678',
         address: 'جدة، شارع التحلية',
-        role: 'CUSTOMER' as Role,
+        role: 'CUSTOMER',
       },
       {
         email: 'omar@example.com',
         name: 'عمر خالد',
         phone: '0503456789',
         address: 'الدمام، شارع الملك خالد',
-        role: 'CUSTOMER' as Role,
+        role: 'CUSTOMER',
       },
       {
         email: 'noor@example.com',
         name: 'نور أحمد',
         phone: '0504567890',
         address: 'مكة، شارع العزيزية',
-        role: 'CUSTOMER' as Role,
+        role: 'CUSTOMER',
       },
       {
         email: 'sara@example.com',
         name: 'سارة محمود',
         phone: '0505678901',
         address: 'المدينة، شارع الملك عبدالله',
-        role: 'CUSTOMER' as Role,
+        role: 'CUSTOMER',
       },
     ];
 
     // إنشاء العملاء
     const createdCustomers = [];
     for (const customerData of customers) {
-      const customer = await prisma.user.upsert({
+      const customer = await (prisma as any).user.upsert({
         where: { email: customerData.email },
         update: {},
         create: customerData,

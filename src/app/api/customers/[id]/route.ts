@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const customer = await prisma.user.findUnique({
+    const customer = await (prisma as any).user.findUnique({
       where: { id },
       include: {
         orders: {
@@ -54,7 +54,7 @@ export async function PUT(
     const body = await request.json();
 
     // التحقق من وجود العميل
-    const existingCustomer = await prisma.user.findUnique({
+    const existingCustomer = await (prisma as any).user.findUnique({
       where: { id },
     });
 
@@ -67,7 +67,7 @@ export async function PUT(
 
     // التحقق من عدم تكرار البريد الإلكتروني إذا تم تغييره
     if (body.email && body.email !== existingCustomer.email) {
-      const duplicateCustomer = await prisma.user.findUnique({
+      const duplicateCustomer = await (prisma as any).user.findUnique({
         where: { email: body.email },
       });
 
@@ -80,7 +80,7 @@ export async function PUT(
     }
 
     // تحديث العميل
-    const updatedCustomer = await prisma.user.update({
+    const updatedCustomer = await (prisma as any).user.update({
       where: { id },
       data: {
         name: body.name,
@@ -125,7 +125,7 @@ export async function DELETE(
     const { id } = await params;
 
     // التحقق من وجود العميل
-    const existingCustomer = await prisma.user.findUnique({
+    const existingCustomer = await (prisma as any).user.findUnique({
       where: { id },
       include: {
         _count: {
@@ -152,7 +152,7 @@ export async function DELETE(
     }
 
     // حذف العميل
-    await prisma.user.delete({
+    await (prisma as any).user.delete({
       where: { id },
     });
 

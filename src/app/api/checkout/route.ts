@@ -31,13 +31,13 @@ export async function POST(request: NextRequest) {
     }
 
     // إنشاء مستخدم مؤقت أو البحث عن مستخدم موجود
-    let user = await prisma.user.findFirst({
+    let user = await (prisma as any).user.findFirst({
       where: { phone }
     });
 
     if (!user) {
       // إنشاء مستخدم جديد
-      user = await prisma.user.create({
+      user = await (prisma as any).user.create({
         data: {
           name: customerName,
           email: customerEmail || null,
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // تحديث بيانات المستخدم إذا كان موجود
-      user = await prisma.user.update({
+      user = await (prisma as any).user.update({
         where: { id: user.id },
         data: {
           name: customerName,
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     // التحقق من توفر الكمية وتحديث المخزون
     for (const item of items) {
-      const product = await prisma.product.findUnique({
+      const product = await (prisma as any).product.findUnique({
         where: { id: item.productId }
       });
 
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       }
 
       // تحديث المخزون
-      await prisma.product.update({
+      await (prisma as any).product.update({
         where: { id: item.productId },
         data: {
           stock: product.stock - item.quantity
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     }
 
     // إنشاء الطلب
-    const order = await prisma.order.create({
+    const order = await (prisma as any).order.create({
       data: {
         userId: user.id,
         totalAmount,

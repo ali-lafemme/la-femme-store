@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     }
 
     // جلب العملاء مع إحصائيات الطلبات
-    const customers = await prisma.user.findMany({
+    const customers = await (prisma as any).user.findMany({
       where,
       select: {
         id: true,
@@ -52,20 +52,19 @@ export async function GET(request: NextRequest) {
     });
 
     // حساب إحصائيات كل عميل
-    const customersWithStats = customers.map(customer => ({
+    const customersWithStats = customers.map((customer: any) => ({
       id: customer.id,
       name: customer.name,
       email: customer.email,
       phone: customer.phone || '',
       address: customer.address,
       totalOrders: customer.orders.length,
-      totalSpent: customer.orders.reduce((sum, order) => sum + order.totalAmount, 0),
-      createdAt: customer.createdAt,
-      updatedAt: customer.updatedAt,
+      totalSpent: customer.orders.reduce((sum: number, order: any) => sum + order.totalAmount, 0),
+      createdAt: customer.createdAt
     }));
 
     // جلب العدد الإجمالي للعملاء
-    const total = await prisma.user.count({ where });
+    const total = await (prisma as any).user.count({ where });
 
     return NextResponse.json({
       success: true,

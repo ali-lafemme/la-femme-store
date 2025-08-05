@@ -18,7 +18,7 @@ async function findCategoryByName(categoryName: string) {
   ];
 
   for (const attempt of searchAttempts) {
-    const category = await prisma.category.findFirst({
+    const category = await (prisma as any).category.findFirst({
       where: {
         name: attempt
       }
@@ -31,7 +31,7 @@ async function findCategoryByName(categoryName: string) {
   }
 
   // إذا لم يتم العثور، جرب البحث الجزئي
-  const partialMatch = await prisma.category.findFirst({
+  const partialMatch = await (prisma as any).category.findFirst({
     where: {
       name: {
         contains: cleanName
@@ -95,21 +95,21 @@ export async function GET(request: NextRequest) {
 
 
 
-    // جلب المنتجات مع الفئة
-    const products = await prisma.product.findMany({
+    // جلب المنتجات
+    const products = await (prisma as any).product.findMany({
       where,
       include: {
         category: true,
       },
-      take: limit,
-      skip: (page - 1) * limit,
       orderBy: {
         createdAt: 'desc',
       },
+      skip: (page - 1) * limit,
+      take: limit,
     });
 
-    // عدد المنتجات الإجمالي
-    const total = await prisma.product.count({ where });
+    // جلب العدد الإجمالي
+    const total = await (prisma as any).product.count({ where });
 
     return NextResponse.json({
       success: true,
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
     }
 
     // التحقق من وجود الفئة
-    const category = await prisma.category.findUnique({
+    const category = await (prisma as any).category.findUnique({
       where: { id: categoryId },
     });
 
@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
     }
 
     // إنشاء المنتج
-    const product = await prisma.product.create({
+    const product = await (prisma as any).product.create({
       data: {
         name,
         description,

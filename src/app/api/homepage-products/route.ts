@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     const { productId, section, order, isActive } = body;
 
     // التحقق من وجود المنتج
-    const product = await prisma.product.findUnique({
+    const product = await (prisma as any).product.findUnique({
       where: { id: productId }
     });
 

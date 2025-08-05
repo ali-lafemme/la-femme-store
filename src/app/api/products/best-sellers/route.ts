@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     // ملاحظة: هذا API يعرض المنتجات الأكثر مبيعاً بناءً على الطلبيات المكتملة فقط (DELIVERED)
 
     // الحصول على المنتجات الأكثر مبيعاً بناءً على الطلبيات المكتملة فقط
-    const bestSellers = await prisma.product.findMany({
+    const bestSellers = await (prisma as any).product.findMany({
       where: {
         stock: { gt: 0 }, // فقط المنتجات المتوفرة
       },
@@ -26,9 +26,9 @@ export async function GET(request: NextRequest) {
 
     // ترتيب النتائج حسب عدد الطلبيات المكتملة فقط
     const sortedBestSellers = bestSellers
-      .map(product => {
+      .map((product: any) => {
         // حساب عدد الطلبيات المكتملة فقط
-        const completedOrders = product.orderItems.filter(item => 
+        const completedOrders = product.orderItems.filter((item: any) => 
           item.order.status === 'DELIVERED'
         ).length;
         
@@ -37,11 +37,11 @@ export async function GET(request: NextRequest) {
           completedOrdersCount: completedOrders,
         };
       })
-      .filter(product => product.completedOrdersCount > 0) // فقط المنتجات التي تم طلبها مكتملة
-      .sort((a, b) => b.completedOrdersCount - a.completedOrdersCount);
+      .filter((product: any) => product.completedOrdersCount > 0) // فقط المنتجات التي تم طلبها مكتملة
+      .sort((a: any, b: any) => b.completedOrdersCount - a.completedOrdersCount);
 
     // تنظيف النتائج
-    const cleanBestSellers = sortedBestSellers.map(product => {
+    const cleanBestSellers = sortedBestSellers.map((product: any) => {
       const { orderItems, completedOrdersCount, ...cleanProduct } = product;
       return cleanProduct;
     });

@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 // DELETE - حذف جميع شرائح Hero
 export async function DELETE() {
   try {
-    await prisma.heroSlide.deleteMany({});
+    await (prisma as any).heroSlide.deleteMany({});
 
     return NextResponse.json({
       success: true,

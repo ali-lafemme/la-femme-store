@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 export async function POST(request: NextRequest) {
   try {
     // التحقق من وجود أدمن بالفعل
-    const existingAdmin = await prisma.admins.findFirst();
+    const existingAdmin = await (prisma as any).admins.findFirst();
     
     if (existingAdmin) {
       return NextResponse.json(

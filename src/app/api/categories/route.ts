@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 // GET - جلب جميع الفئات
 export async function GET() {
   try {
-    const categories = await prisma.category.findMany({
+    const categories = await (prisma as any).category.findMany({
       orderBy: {
         name: 'asc',
       },
@@ -17,7 +17,7 @@ export async function GET() {
       },
     });
 
-    const categoriesWithCount = categories.map(category => ({
+    const categoriesWithCount = categories.map((category: any) => ({
       ...category,
       productCount: category._count.products,
     }));
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     // التحقق من عدم تكرار اسم الفئة
-    const existingCategory = await prisma.category.findUnique({
+    const existingCategory = await (prisma as any).category.findUnique({
       where: { name },
     });
 
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     }
 
     // إنشاء الفئة
-    const category = await prisma.category.create({
+    const category = await (prisma as any).category.create({
       data: {
         name,
         description,

@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const category = await prisma.category.findUnique({
+    const category = await (prisma as any).category.findUnique({
       where: { id },
       include: {
         _count: {
@@ -53,7 +53,7 @@ export async function PUT(
     const body = await request.json();
 
     // التحقق من وجود الفئة
-    const existingCategory = await prisma.category.findUnique({
+    const existingCategory = await (prisma as any).category.findUnique({
       where: { id },
     });
 
@@ -66,7 +66,7 @@ export async function PUT(
 
     // التحقق من عدم تكرار اسم الفئة إذا تم تغييره
     if (body.name && body.name !== existingCategory.name) {
-      const duplicateCategory = await prisma.category.findUnique({
+      const duplicateCategory = await (prisma as any).category.findUnique({
         where: { name: body.name },
       });
 
@@ -79,7 +79,7 @@ export async function PUT(
     }
 
     // تحديث الفئة
-    const updatedCategory = await prisma.category.update({
+    const updatedCategory = await (prisma as any).category.update({
       where: { id },
       data: {
         name: body.name,
@@ -121,7 +121,7 @@ export async function DELETE(
     const { id } = await params;
 
     // التحقق من وجود الفئة
-    const existingCategory = await prisma.category.findUnique({
+    const existingCategory = await (prisma as any).category.findUnique({
       where: { id },
       include: {
         _count: {
@@ -148,7 +148,7 @@ export async function DELETE(
     }
 
     // حذف الفئة
-    await prisma.category.delete({
+    await (prisma as any).category.delete({
       where: { id },
     });
 

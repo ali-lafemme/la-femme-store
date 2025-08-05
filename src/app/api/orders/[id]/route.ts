@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const order = await prisma.order.findUnique({
+    const order = await (prisma as any).order.findUnique({
       where: { id },
       include: {
         user: true,
@@ -51,7 +51,7 @@ export async function PUT(
     const body = await request.json();
 
     // التحقق من وجود الطلب
-    const existingOrder = await prisma.order.findUnique({
+    const existingOrder = await (prisma as any).order.findUnique({
       where: { id },
     });
 
@@ -63,7 +63,7 @@ export async function PUT(
     }
 
     // تحديث الطلب
-    const updatedOrder = await prisma.order.update({
+    const updatedOrder = await (prisma as any).order.update({
       where: { id },
       data: {
         status: body.status,
@@ -104,7 +104,7 @@ export async function DELETE(
     const { id } = await params;
 
     // التحقق من وجود الطلب
-    const existingOrder = await prisma.order.findUnique({
+    const existingOrder = await (prisma as any).order.findUnique({
       where: { id },
     });
 
@@ -116,7 +116,7 @@ export async function DELETE(
     }
 
     // حذف الطلب (سيتم حذف العناصر المرتبطة تلقائياً)
-    await prisma.order.delete({
+    await (prisma as any).order.delete({
       where: { id },
     });
 

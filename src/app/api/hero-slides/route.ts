@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 // GET - جلب جميع شرائح Hero
 export async function GET() {
   try {
-    const slides = await prisma.heroSlide.findMany({
+    const slides = await (prisma as any).heroSlide.findMany({
       orderBy: {
         order: 'asc'
       }
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const slide = await prisma.heroSlide.create({
+    const slide = await (prisma as any).heroSlide.create({
       data: {
         title,
         subtitle,

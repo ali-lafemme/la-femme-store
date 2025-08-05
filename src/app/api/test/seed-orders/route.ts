@@ -4,8 +4,8 @@ import { prisma } from '@/lib/prisma';
 export async function POST(request: NextRequest) {
   try {
     // الحصول على المستخدمين والمنتجات الموجودة
-    const users = await prisma.user.findMany({ where: { role: 'CUSTOMER' } });
-    const products = await prisma.product.findMany({ take: 5 });
+    const users = await (prisma as any).user.findMany({ where: { role: 'CUSTOMER' } });
+    const products = await (prisma as any).product.findMany({ take: 5 });
     
     if (users.length === 0 || products.length === 0) {
       return NextResponse.json(
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       const status = statuses[Math.floor(Math.random() * statuses.length)];
       
       // إنشاء الطلب
-      const order = await prisma.order.create({
+      const order = await (prisma as any).order.create({
         data: {
           userId: user.id,
           status: status as 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED',

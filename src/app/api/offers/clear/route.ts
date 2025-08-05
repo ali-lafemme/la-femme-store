@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 // DELETE - حذف جميع العروض
 export async function DELETE() {
   try {
-    await prisma.offer.deleteMany({});
+    await (prisma as any).offer.deleteMany({});
 
     return NextResponse.json({
       success: true,

@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const product = await prisma.product.findUnique({
+    const product = await (prisma as any).product.findUnique({
       where: { id },
       include: {
         category: true,
@@ -46,7 +46,7 @@ export async function PUT(
     const body = await request.json();
 
     // التحقق من وجود المنتج
-    const existingProduct = await prisma.product.findUnique({
+    const existingProduct = await (prisma as any).product.findUnique({
       where: { id },
     });
 
@@ -59,7 +59,7 @@ export async function PUT(
 
     // التحقق من وجود الفئة إذا تم تغييرها
     if (body.categoryId && body.categoryId !== existingProduct.categoryId) {
-      const category = await prisma.category.findUnique({
+      const category = await (prisma as any).category.findUnique({
         where: { id: body.categoryId },
       });
 
@@ -72,7 +72,7 @@ export async function PUT(
     }
 
     // تحديث المنتج
-    const updatedProduct = await prisma.product.update({
+    const updatedProduct = await (prisma as any).product.update({
       where: { id },
       data: {
         name: body.name,
@@ -123,7 +123,7 @@ export async function DELETE(
     const { id } = await params;
 
     // التحقق من وجود المنتج
-    const existingProduct = await prisma.product.findUnique({
+    const existingProduct = await (prisma as any).product.findUnique({
       where: { id },
     });
 
@@ -135,7 +135,7 @@ export async function DELETE(
     }
 
     // حذف المنتج
-    await prisma.product.delete({
+    await (prisma as any).product.delete({
       where: { id },
     });
 

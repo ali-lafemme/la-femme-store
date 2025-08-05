@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 // GET - جلب جميع العروض
 export async function GET() {
   try {
-    const offers = await prisma.offer.findMany({
+    const offers = await (prisma as any).offer.findMany({
       include: {
         category: {
           select: {
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const offer = await prisma.offer.create({
+    const offer = await (prisma as any).offer.create({
       data: {
         title,
         description,

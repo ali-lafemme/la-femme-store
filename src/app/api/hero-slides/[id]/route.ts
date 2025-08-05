@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
     
-    const slide = await prisma.heroSlide.findUnique({
+    const slide = await (prisma as any).heroSlide.findUnique({
       where: { id }
     });
 
@@ -48,7 +48,7 @@ export async function PUT(
     const { title, subtitle, description, image, ctaText, ctaLink, bgColor, isActive, order } = body;
 
     // التحقق من وجود الشريحة
-    const existingSlide = await prisma.heroSlide.findUnique({
+    const existingSlide = await (prisma as any).heroSlide.findUnique({
       where: { id }
     });
 
@@ -67,7 +67,7 @@ export async function PUT(
       );
     }
 
-    const updatedSlide = await prisma.heroSlide.update({
+    const updatedSlide = await (prisma as any).heroSlide.update({
       where: { id },
       data: {
         title,
@@ -109,7 +109,7 @@ export async function DELETE(
     const { id } = await params;
 
     // التحقق من وجود الشريحة
-    const existingSlide = await prisma.heroSlide.findUnique({
+    const existingSlide = await (prisma as any).heroSlide.findUnique({
       where: { id }
     });
 
@@ -120,7 +120,7 @@ export async function DELETE(
       );
     }
 
-    await prisma.heroSlide.delete({
+    await (prisma as any).heroSlide.delete({
       where: { id }
     });
 

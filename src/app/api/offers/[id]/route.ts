@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
     
-    const offer = await prisma.offer.findUnique({
+    const offer = await (prisma as any).offer.findUnique({
       where: { id },
       include: {
         category: true
@@ -47,7 +47,7 @@ export async function PUT(
     const { title, description, discountPercentage, originalPrice, discountedPrice, categoryId, image, isActive, order, expiresAt } = body;
 
     // التحقق من وجود العرض
-    const existingOffer = await prisma.offer.findUnique({
+    const existingOffer = await (prisma as any).offer.findUnique({
       where: { id }
     });
 
@@ -66,7 +66,7 @@ export async function PUT(
       );
     }
 
-    const updatedOffer = await prisma.offer.update({
+    const updatedOffer = await (prisma as any).offer.update({
       where: { id },
       data: {
         title,
@@ -108,7 +108,7 @@ export async function DELETE(
     const { id } = await params;
 
     // التحقق من وجود العرض
-    const existingOffer = await prisma.offer.findUnique({
+    const existingOffer = await (prisma as any).offer.findUnique({
       where: { id }
     });
 
@@ -119,7 +119,7 @@ export async function DELETE(
       );
     }
 
-    await prisma.offer.delete({
+    await (prisma as any).offer.delete({
       where: { id }
     });
 

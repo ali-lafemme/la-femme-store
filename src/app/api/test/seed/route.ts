@@ -6,28 +6,28 @@ export async function POST(request: NextRequest) {
   try {
     // إنشاء الفئات
     const categories = await Promise.all([
-      prisma.category.create({
+      (prisma as any).category.create({
         data: {
           name: 'المكياج',
           description: 'جميع منتجات المكياج والعناية بالجمال',
           image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=500',
         },
       }),
-      prisma.category.create({
+      (prisma as any).category.create({
         data: {
           name: 'العناية بالبشرة',
           description: 'منتجات العناية بالبشرة والكريمات',
           image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500',
         },
       }),
-      prisma.category.create({
+      (prisma as any).category.create({
         data: {
           name: 'العناية بالشعر',
           description: 'منتجات العناية بالشعر والزيوت',
           image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=500',
         },
       }),
-      prisma.category.create({
+      (prisma as any).category.create({
         data: {
           name: 'الأظافر',
           description: 'منتجات العناية بالأظافر والطلاء',
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     // إنشاء المنتجات
     const products = await Promise.all([
       // منتجات المكياج
-      prisma.product.create({
+      (prisma as any).product.create({
         data: {
           name: 'أحمر شفاه مات',
           description: 'أحمر شفاه مات طويل الأمد بألوان رائعة',
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
           isBestSeller: true,
         },
       }),
-      prisma.product.create({
+      (prisma as any).product.create({
         data: {
           name: 'كونسيلر عالي التغطية',
           description: 'كونسيلر يخفي العيوب ويوفر تغطية مثالية',
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
           isBestSeller: true,
         },
       }),
-      prisma.product.create({
+      (prisma as any).product.create({
         data: {
           name: 'ماسكارا طويلة الأمد',
           description: 'ماسكارا تعطي رموش طويلة وكثيفة',
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
       }),
 
       // منتجات العناية بالبشرة
-      prisma.product.create({
+      (prisma as any).product.create({
         data: {
           name: 'كريم مرطب للوجه',
           description: 'كريم مرطب عميق للبشرة الجافة',
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
           isBestSeller: true,
         },
       }),
-      prisma.product.create({
+      (prisma as any).product.create({
         data: {
           name: 'سيروم فيتامين سي',
           description: 'سيروم فيتامين سي لتوحيد لون البشرة',
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
       }),
 
       // منتجات العناية بالشعر
-      prisma.product.create({
+      (prisma as any).product.create({
         data: {
           name: 'زيت الأرغان للشعر',
           description: 'زيت الأرغان الطبيعي لتغذية الشعر',
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
           isBestSeller: true,
         },
       }),
-      prisma.product.create({
+      (prisma as any).product.create({
         data: {
           name: 'شامبو للشعر الجاف',
           description: 'شامبو مخصص للشعر الجاف والمتضرر',
@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
       }),
 
       // منتجات الأظافر
-      prisma.product.create({
+      (prisma as any).product.create({
         data: {
           name: 'طلاء أظافر طويل الأمد',
           description: 'طلاء أظافر مقاوم للتقشير',
@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
           isBestSeller: false,
         },
       }),
-      prisma.product.create({
+      (prisma as any).product.create({
         data: {
           name: 'زيت تقوية الأظافر',
           description: 'زيت لتقوية الأظافر ومنع التكسر',

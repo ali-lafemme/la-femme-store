@@ -4,11 +4,11 @@ import { prisma } from '@/lib/prisma';
 // GET - جلب إعدادات الصفحة الرئيسية
 export async function GET() {
   try {
-    const settings = await prisma.homepageSettings.findFirst();
+    const settings = await (prisma as any).homepageSettings.findFirst();
 
     if (!settings) {
       // إنشاء إعدادات افتراضية إذا لم تكن موجودة
-      const defaultSettings = await prisma.homepageSettings.create({
+      const defaultSettings = await (prisma as any).homepageSettings.create({
         data: {
           featuredProductsCount: 8,
           bestSellersCount: 8,
@@ -55,7 +55,7 @@ export async function PUT(request: NextRequest) {
       showFeatures
     } = body;
 
-    const settings = await prisma.homepageSettings.upsert({
+    const settings = await (prisma as any).homepageSettings.upsert({
       where: { id: '1' }, // استخدام ID ثابت
       update: {
         featuredProductsCount: featuredProductsCount || 8,
