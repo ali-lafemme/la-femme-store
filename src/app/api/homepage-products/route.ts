@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       whereClause.section = section;
     }
 
-    const homepageProducts = await prisma.homepageProducts.findMany({
+    const homepageProducts = await (prisma as any).homepageProducts.findMany({
       where: whereClause,
       include: {
         product: {
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     }
 
     // التحقق من عدم وجود المنتج في نفس القسم
-    const existingProduct = await prisma.homepageProducts.findFirst({
+    const existingProduct = await (prisma as any).homepageProducts.findFirst({
       where: {
         productId,
         section
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const homepageProduct = await prisma.homepageProducts.create({
+    const homepageProduct = await (prisma as any).homepageProducts.create({
       data: {
         productId,
         section,

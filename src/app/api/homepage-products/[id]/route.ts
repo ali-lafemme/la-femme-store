@@ -9,7 +9,7 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    const homepageProduct = await prisma.homepageProducts.findUnique({
+    const homepageProduct = await (prisma as any).homepageProducts.findUnique({
       where: { id }
     });
 
@@ -20,7 +20,7 @@ export async function DELETE(
       );
     }
 
-    await prisma.homepageProducts.delete({
+    await (prisma as any).homepageProducts.delete({
       where: { id }
     });
 
@@ -51,7 +51,7 @@ export async function PUT(
     const body = await request.json();
     const { order, isActive } = body;
 
-    const updatedHomepageProduct = await prisma.homepageProducts.update({
+    const updatedHomepageProduct = await (prisma as any).homepageProducts.update({
       where: { id },
       data: {
         order: order !== undefined ? parseInt(order) : undefined,
