@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 // GET - جلب طلب واحد
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -12,26 +12,10 @@ export async function GET(
     const order = await prisma.order.findUnique({
       where: { id },
       include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            phone: true,
-            address: true,
-          },
-        },
+        user: true,
         items: {
           include: {
-            product: {
-              select: {
-                id: true,
-                name: true,
-                image: true,
-                price: true,
-                description: true,
-              },
-            },
+            product: true,
           },
         },
       },
@@ -57,10 +41,10 @@ export async function GET(
   }
 }
 
-// PUT - تحديث حالة الطلب
+// PUT - تحديث طلب
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -83,27 +67,15 @@ export async function PUT(
       where: { id },
       data: {
         status: body.status,
+        shippingAddress: body.shippingAddress,
+        phone: body.phone,
         notes: body.notes,
       },
       include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            phone: true,
-          },
-        },
+        user: true,
         items: {
           include: {
-            product: {
-              select: {
-                id: true,
-                name: true,
-                image: true,
-                price: true,
-              },
-            },
+            product: true,
           },
         },
       },
@@ -126,7 +98,7 @@ export async function PUT(
 // DELETE - حذف طلب
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -143,7 +115,7 @@ export async function DELETE(
       );
     }
 
-    // حذف الطلب
+    // حذف الطلب (سيتم حذف العناصر المرتبطة تلقائياً)
     await prisma.order.delete({
       where: { id },
     });

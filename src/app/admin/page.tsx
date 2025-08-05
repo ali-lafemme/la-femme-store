@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { getProducts, getCategories, getOrders, getCustomers } from '@/lib/api';
+import { getProducts, getCategories, getOrders, getCustomers, Product } from '@/lib/api';
 import AdminHeader from '@/components/admin/AdminHeader';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import DashboardStats from '@/components/admin/DashboardStats';
@@ -24,7 +24,7 @@ export default function AdminDashboard() {
     deliveredOrders: 0,
     activeCustomers: 0,
   });
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
@@ -98,9 +98,9 @@ export default function AdminDashboard() {
           </div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">غير مسموح بالوصول</h2>
           <p className="text-gray-600 mb-4">يجب تسجيل الدخول للوصول إلى لوحة التحكم</p>
-          <a 
-            href="/login" 
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          <a
+            href="/login"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
           >
             تسجيل الدخول
           </a>
@@ -109,37 +109,43 @@ export default function AdminDashboard() {
     );
   }
 
+  // عرض شاشة تحميل البيانات
+  if (loadingData) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <AdminHeader />
+        <div className="flex">
+          <AdminSidebar />
+          <main className="flex-1 p-6">
+            <div className="flex items-center justify-center h-64">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500 mx-auto mb-4"></div>
+                <p className="text-gray-600">جاري تحميل البيانات...</p>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminHeader admin={admin} />
-      
+      <AdminHeader />
       <div className="flex">
         <AdminSidebar />
-        
         <main className="flex-1 p-6">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               لوحة التحكم
             </h1>
             <p className="text-gray-600">
-              مرحباً بك {admin?.name || admin?.username} في لوحة تحكم متجر La Femme
+              مرحباً {admin?.name || admin?.username}، إليك نظرة عامة على متجرك
             </p>
           </div>
 
-          {loadingData ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500 mx-auto mb-4"></div>
-              <p className="text-gray-600">جاري تحميل البيانات...</p>
-            </div>
-          ) : (
-            <>
-              {/* الإحصائيات */}
-              <DashboardStats stats={stats} />
-              
-              {/* المنتجات الحديثة */}
-              <RecentProducts products={products.slice(0, 5)} />
-            </>
-          )}
+          <DashboardStats stats={stats} />
+          <RecentProducts products={products.slice(0, 5)} />
         </main>
       </div>
     </div>

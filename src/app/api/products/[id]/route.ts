@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 
-const prisma = new PrismaClient();
-
+// GET - جلب منتج واحد
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -13,30 +12,26 @@ export async function GET(
     const product = await prisma.product.findUnique({
       where: { id },
       include: {
-        category: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+        category: true,
       },
     });
 
     if (!product) {
       return NextResponse.json(
-        { error: 'المنتج غير موجود' },
-        { status: 404, headers: { 'Content-Type': 'application/json; charset=utf-8' } }
+        { success: false, error: 'المنتج غير موجود' },
+        { status: 404 }
       );
     }
 
-    return NextResponse.json(product, {
-      headers: { 'Content-Type': 'application/json; charset=utf-8' }
+    return NextResponse.json({
+      success: true,
+      data: product,
     });
   } catch (error) {
     console.error('Error fetching product:', error);
     return NextResponse.json(
-      { error: 'خطأ في جلب المنتج' },
-      { status: 500, headers: { 'Content-Type': 'application/json; charset=utf-8' } }
+      { success: false, error: 'فشل في جلب المنتج' },
+      { status: 500 }
     );
   }
 }
@@ -44,7 +39,7 @@ export async function GET(
 // PUT - تحديث منتج
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -63,7 +58,7 @@ export async function PUT(
     }
 
     // التحقق من وجود الفئة إذا تم تغييرها
-    if (body.categoryId) {
+    if (body.categoryId && body.categoryId !== existingProduct.categoryId) {
       const category = await prisma.category.findUnique({
         where: { id: body.categoryId },
       });
@@ -82,15 +77,23 @@ export async function PUT(
       data: {
         name: body.name,
         description: body.description,
-        price: body.price ? parseFloat(body.price) : undefined,
-        originalPrice: body.originalPrice ? parseFloat(body.originalPrice) : null,
+        price: body.price,
+        originalPrice: body.originalPrice,
         image: body.image,
         images: body.images,
         categoryId: body.categoryId,
-        stock: body.stock ? parseInt(body.stock) : undefined,
+        stock: body.stock,
+        rating: body.rating,
+        reviewCount: body.reviewCount,
         isNew: body.isNew,
         isBestSeller: body.isBestSeller,
         isActive: body.isActive,
+        ingredients: body.ingredients,
+        usage: body.usage,
+        benefits: body.benefits,
+        weight: body.weight,
+        brand: body.brand,
+        sku: body.sku,
       },
       include: {
         category: true,
@@ -114,7 +117,7 @@ export async function PUT(
 // DELETE - حذف منتج
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { StarIcon as StarOutlineIcon } from '@heroicons/react/24/outline';
 import Header from '@/components/Header';
@@ -238,7 +239,7 @@ export default function ProductDetailPage() {
           {/* Breadcrumb */}
           <nav className="mb-8">
             <ol className="flex items-center space-x-2 text-sm text-gray-500">
-              <li><a href="/" className="hover:text-pink-500">الرئيسية</a></li>
+              <li><Link href="/" className="hover:text-pink-500">الرئيسية</Link></li>
               <li>/</li>
               <li><a href={`/${product.category.name.toLowerCase()}`} className="hover:text-pink-500">{product.category.name}</a></li>
               <li>/</li>

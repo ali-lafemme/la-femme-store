@@ -4,27 +4,21 @@ import { prisma } from '@/lib/prisma';
 // GET - جلب عميل واحد
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
 
     const customer = await prisma.user.findUnique({
       where: { id },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        address: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
         orders: {
-          select: {
-            id: true,
-            totalAmount: true,
-            status: true,
-            createdAt: true,
+          include: {
+            items: {
+              include: {
+                product: true,
+              },
+            },
           },
         },
       },
@@ -37,21 +31,9 @@ export async function GET(
       );
     }
 
-    const customerWithStats = {
-      id: customer.id,
-      name: customer.name,
-      email: customer.email,
-      phone: customer.phone || '',
-      address: customer.address,
-      totalOrders: customer.orders.length,
-      totalSpent: customer.orders.reduce((sum, order) => sum + order.totalAmount, 0),
-      createdAt: customer.createdAt,
-      updatedAt: customer.updatedAt,
-    };
-
     return NextResponse.json({
       success: true,
-      data: customerWithStats,
+      data: customer,
     });
   } catch (error) {
     console.error('Error fetching customer:', error);
@@ -62,10 +44,10 @@ export async function GET(
   }
 }
 
-// PUT - تحديث العميل
+// PUT - تحديث عميل
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -83,23 +65,15 @@ export async function PUT(
       );
     }
 
-    // التحقق من صحة البيانات
-    if (!body.name || !body.email || !body.phone) {
-      return NextResponse.json(
-        { success: false, error: 'الاسم والبريد الإلكتروني والهاتف مطلوبة' },
-        { status: 400 }
-      );
-    }
-
-    // التحقق من عدم تكرار البريد الإلكتروني
-    if (body.email !== existingCustomer.email) {
-      const emailExists = await prisma.user.findUnique({
+    // التحقق من عدم تكرار البريد الإلكتروني إذا تم تغييره
+    if (body.email && body.email !== existingCustomer.email) {
+      const duplicateCustomer = await prisma.user.findUnique({
         where: { email: body.email },
       });
 
-      if (emailExists) {
+      if (duplicateCustomer) {
         return NextResponse.json(
-          { success: false, error: 'البريد الإلكتروني مستخدم بالفعل' },
+          { success: false, error: 'البريد الإلكتروني موجود مسبقاً' },
           { status: 400 }
         );
       }
@@ -113,6 +87,18 @@ export async function PUT(
         email: body.email,
         phone: body.phone,
         address: body.address,
+        role: body.role,
+      },
+      include: {
+        orders: {
+          include: {
+            items: {
+              include: {
+                product: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -130,10 +116,10 @@ export async function PUT(
   }
 }
 
-// DELETE - حذف العميل
+// DELETE - حذف عميل
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -141,6 +127,13 @@ export async function DELETE(
     // التحقق من وجود العميل
     const existingCustomer = await prisma.user.findUnique({
       where: { id },
+      include: {
+        _count: {
+          select: {
+            orders: true,
+          },
+        },
+      },
     });
 
     if (!existingCustomer) {
@@ -150,7 +143,15 @@ export async function DELETE(
       );
     }
 
-    // حذف العميل (سيتم حذف الطلبات المرتبطة تلقائياً بسبب CASCADE)
+    // التحقق من وجود طلبات للعميل
+    if (existingCustomer._count.orders > 0) {
+      return NextResponse.json(
+        { success: false, error: 'لا يمكن حذف العميل لوجود طلبات مرتبطة به' },
+        { status: 400 }
+      );
+    }
+
+    // حذف العميل
     await prisma.user.delete({
       where: { id },
     });

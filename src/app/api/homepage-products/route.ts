@@ -7,7 +7,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const section = searchParams.get('section');
 
-    const whereClause: any = {
+    const whereClause: {
+      isActive: boolean;
+      section?: string;
+    } = {
       isActive: true
     };
 

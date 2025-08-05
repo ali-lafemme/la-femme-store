@@ -11,7 +11,13 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // بناء شروط البحث
-    const where: any = {};
+    const where: {
+      OR?: Array<{
+        name?: { contains: string; mode: 'insensitive' };
+        email?: { contains: string; mode: 'insensitive' };
+        phone?: { contains: string; mode: 'insensitive' };
+      }>;
+    } = {};
     if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },

@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 export async function POST(request: NextRequest) {
   try {
     // التحقق من وجود أدمن بالفعل
-    const existingAdmin = await prisma.admin.findFirst();
+    const existingAdmin = await prisma.admins.findFirst();
     
     if (existingAdmin) {
       return NextResponse.json(
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash('admin123', 12);
 
     // إنشاء الأدمن الافتراضي
-    const admin = await prisma.admin.create({
+    const admin = await (prisma as any).admins.create({
       data: {
         username: 'admin',
         password: hashedPassword,

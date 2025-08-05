@@ -27,10 +27,10 @@ export async function POST(request: NextRequest) {
       const order = await prisma.order.create({
         data: {
           userId: user.id,
-          status: status as any,
+          status: status as 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED',
           totalAmount: product.price * (Math.floor(Math.random() * 3) + 1),
           shippingAddress: user.address || 'عنوان تجريبي',
-          phone: user.phone,
+          phone: user.phone || '0500000000',
           notes: `طلب تجريبي رقم ${i + 1}`,
           items: {
             create: {

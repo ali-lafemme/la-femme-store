@@ -81,7 +81,11 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 
   const handleSendWhatsApp = async (order: Order) => {
     try {
-      const message = createOrderNotification(order);
+      const orderForNotification = {
+        ...order,
+        notes: order.notes || undefined
+      };
+      const message = createOrderNotification(orderForNotification);
       const whatsappUrl = `https://wa.me/381615851106?text=${encodeURIComponent(message)}`;
       
       // فتح رابط الواتساب في نافذة جديدة
@@ -241,7 +245,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
                 </label>
                 <select
                   value={editingOrder.status}
-                  onChange={(e) => setEditingOrder({ ...editingOrder, status: e.target.value as any })}
+                  onChange={(e) => setEditingOrder({ ...editingOrder, status: e.target.value as 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="PENDING">معلق</option>

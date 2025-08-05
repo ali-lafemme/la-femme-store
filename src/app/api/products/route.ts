@@ -57,7 +57,14 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search');
 
     // بناء query
-    const where: any = {
+    const where: {
+      isActive: boolean;
+      categoryId?: string;
+      OR?: Array<{
+        name?: { contains: string; mode: 'insensitive' };
+        description?: { contains: string; mode: 'insensitive' };
+      }>;
+    } = {
       isActive: true,
     };
 

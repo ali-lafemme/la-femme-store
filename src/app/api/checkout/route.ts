@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
         phone,
         notes: notes || null,
         items: {
-          create: items.map((item: any) => ({
+          create: items.map((item: { productId: string; quantity: number; price: number }) => ({
             productId: item.productId,
             quantity: item.quantity,
             price: item.price,
@@ -128,7 +128,12 @@ export async function POST(request: NextRequest) {
     });
 
     // إرسال إشعار الواتساب
-    const notificationMessage = createOrderNotification(order);
+    const orderForNotification = {
+      ...order,
+      notes: order.notes || undefined,
+      createdAt: order.createdAt.toISOString()
+    };
+    const notificationMessage = createOrderNotification(orderForNotification);
     const whatsappResult = await sendWhatsAppNotification(notificationMessage);
     
     if (whatsappResult.success) {

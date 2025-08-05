@@ -11,9 +11,11 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // بناء شروط البحث
-    const where: any = {};
+    const where: {
+      status?: 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+    } = {};
     if (status) {
-      where.status = status;
+      where.status = status as 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
     }
 
     // جلب الطلبات مع العلاقات
@@ -105,7 +107,7 @@ export async function POST(request: NextRequest) {
         phone,
         notes,
         items: {
-          create: items.map((item: any) => ({
+          create: items.map((item: { productId: string; quantity: number; price: number }) => ({
             productId: item.productId,
             quantity: item.quantity,
             price: item.price,

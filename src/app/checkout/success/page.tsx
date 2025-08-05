@@ -1,13 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
-
-const CheckoutSuccessPage = () => {
+const CheckoutSuccessContent = () => {
   const searchParams = useSearchParams();
   const [orderId, setOrderId] = useState<string>('');
 
@@ -21,8 +20,6 @@ const CheckoutSuccessPage = () => {
       setOrderId(`ORD-${Date.now().toString().slice(-8)}`);
     }
   }, [searchParams]);
-
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
@@ -52,15 +49,15 @@ const CheckoutSuccessPage = () => {
             <h2 className="text-xl font-semibold text-gray-900 mb-6">تفاصيل الطلب</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-right">
-                             <div>
-                 <h3 className="font-medium text-gray-900 mb-2">رقم الطلب</h3>
-                 <p className="text-gray-600">#{orderId}</p>
-               </div>
+              <div>
+                <h3 className="font-medium text-gray-900 mb-2">رقم الطلب</h3>
+                <p className="text-gray-600">#{orderId}</p>
+              </div>
               
-                             <div>
-                 <h3 className="font-medium text-gray-900 mb-2">تاريخ الطلب</h3>
-                 <p className="text-gray-600">{new Date().toLocaleDateString('fr-FR')}</p>
-               </div>
+              <div>
+                <h3 className="font-medium text-gray-900 mb-2">تاريخ الطلب</h3>
+                <p className="text-gray-600">{new Date().toLocaleDateString('fr-FR')}</p>
+              </div>
               
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">حالة الطلب</h3>
@@ -138,37 +135,50 @@ const CheckoutSuccessPage = () => {
             </div>
           </div>
 
-                     {/* الأزرار */}
-           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-             <Link
-               href="/"
-               className="inline-flex items-center justify-center px-6 py-3 bg-pink-500 hover:bg-pink-600 text-white font-medium rounded-lg transition-colors duration-200"
-             >
-               <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-               </svg>
-               العودة للرئيسية
-             </Link>
-             
-             
-              
-              <a
-                href="https://wa.me/381615851106"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200"
-              >
-                <svg className="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 0C4.477 0 0 4.477 0 10c0 1.821.487 3.53 1.338 5.012L0 20l5.233-1.237A9.954 9.954 0 0010 20c5.523 0 10-4.477 10-10S15.523 0 10 0zm0 18c-1.821 0-3.53-.487-5.012-1.338L2.5 17.5l.838-2.488A7.954 7.954 0 012 10c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/>
-                </svg>
-                تواصل معنا عبر الواتساب
-              </a>
-           </div>
+          {/* الأزرار */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center px-6 py-3 bg-pink-500 hover:bg-pink-600 text-white font-medium rounded-lg transition-colors duration-200"
+            >
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              العودة للرئيسية
+            </Link>
+            
+            <a
+              href="https://wa.me/381615851106"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200"
+            >
+              <svg className="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 0C4.477 0 0 4.477 0 10c0 1.821.487 3.53 1.338 5.012L0 20l5.233-1.237A9.954 9.954 0 0010 20c5.523 0 10-4.477 10-10S15.523 0 10 0zm0 18c-1.821 0-3.53-.487-5.012-1.338L2.5 17.5l.838-2.488A7.954 7.954 0 012 10c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/>
+              </svg>
+              تواصل معنا عبر الواتساب
+            </a>
+          </div>
         </div>
       </main>
       
       <Footer />
     </div>
+  );
+};
+
+const CheckoutSuccessPage = () => {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">جاري التحميل...</p>
+        </div>
+      </div>
+    }>
+      <CheckoutSuccessContent />
+    </Suspense>
   );
 };
 

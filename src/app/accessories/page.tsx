@@ -11,7 +11,7 @@ import Footer from '@/components/Footer';
 export default function AccessoriesPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -20,11 +20,8 @@ export default function AccessoriesPage() {
     const fetchData = async () => {
       try {
         const productsResponse = await getProducts({ category: 'اكسسورات' });
-        const categoriesResponse = await getCategories();
-        
         setProducts(productsResponse.data || []);
         setFilteredProducts(productsResponse.data || []);
-        setCategories(categoriesResponse.data || []);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {

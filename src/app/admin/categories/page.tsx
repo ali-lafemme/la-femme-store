@@ -1,12 +1,19 @@
-import { getCategories } from '@/lib/api';
+import { getCategories, Category } from '@/lib/api';
 import AdminHeader from '@/components/admin/AdminHeader';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import CategoriesTable from '@/components/admin/CategoriesTable';
 import AddCategoryButton from '@/components/admin/AddCategoryButton';
 
 export default async function AdminCategories() {
-  const categoriesResponse = await getCategories();
-  const categories = categoriesResponse.success ? categoriesResponse.data : [];
+  let categories: Category[] = [];
+  
+  try {
+    const categoriesResponse = await getCategories();
+    categories = categoriesResponse.success ? categoriesResponse.data : [];
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    categories = [];
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -72,7 +79,7 @@ export default async function AdminCategories() {
                 <div className="mr-4">
                   <p className="text-sm font-medium text-gray-600">فئات نشطة</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {categories.filter(cat => cat.isActive !== false).length}
+                    {categories.length}
                   </p>
                 </div>
               </div>

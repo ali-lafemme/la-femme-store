@@ -34,9 +34,26 @@ export async function sendWhatsAppNotification(message: string, phoneNumber: str
 }
 
 // دالة إنشاء رسالة طلب جديد
-export function createOrderNotification(order: any) {
+export function createOrderNotification(order: { 
+  id: string; 
+  user?: { name?: string }; 
+  phone: string; 
+  shippingAddress: string; 
+  totalAmount: number; 
+  notes?: string; 
+  createdAt: string; 
+  items: Array<{ 
+    quantity: number; 
+    product?: { name?: string }; 
+    price: number; 
+  }>; 
+}) {
   const items = order.items || [];
-  const productsList = items.map((item: any) => 
+  const productsList = items.map((item: { 
+    quantity: number; 
+    product?: { name?: string }; 
+    price: number; 
+  }) => 
     `• ${item.quantity}x ${item.product?.name || 'منتج'} - ${item.price.toFixed(2)} دينار ليبي`
   ).join('\n');
 

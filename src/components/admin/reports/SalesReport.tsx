@@ -52,7 +52,7 @@ export default function SalesReport() {
       // أفضل الفئات مبيعاً
       const categorySales = filteredOrders.reduce((acc, order) => {
         order.items.forEach(item => {
-          const category = item.product.category?.name || 'غير محدد';
+          const category = 'غير محدد'; // لا تتوفر معلومات الفئة في البيانات الحالية
           acc[category] = (acc[category] || 0) + item.quantity;
         });
         return acc;

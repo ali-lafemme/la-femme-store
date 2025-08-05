@@ -286,7 +286,7 @@ export async function addHomepageProduct(data: {
 }
 
 // حذف منتج مميز
-export async function deleteHomepageProduct(id: string): Promise<ApiResponse<any>> {
+export async function deleteHomepageProduct(id: string): Promise<ApiResponse<{ success: boolean; message: string }>> {
   const response = await fetch(`${API_BASE_URL}/api/homepage-products/${id}`, {
     method: 'DELETE',
   });
