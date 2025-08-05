@@ -34,7 +34,7 @@ export default function ProductDetailPage() {
         const response = await fetch(`/api/products/${productId}`);
         if (response.ok) {
           const data = await response.json();
-          setProduct(data);
+          setProduct(data.data);
           
           // توليد تقييم ديناميكي بناءً على المبيعات والخصائص
           const generateDynamicRating = () => {
@@ -46,17 +46,17 @@ export default function ProductDetailPage() {
             let baseRating = 3; // تقييم افتراضي 3 نجوم
             
             // إذا كان المنتج جديد
-            if (data.isNew) {
+            if (data.data.isNew) {
               baseRating += 0.3;
             }
             
             // إذا كان من الأكثر مبيعاً
-            if (data.isBestSeller) {
+            if (data.data.isBestSeller) {
               baseRating += 0.5;
             }
             
             // إذا كان السعر مرتفع (منتج فاخر)
-            if (data.price > 100) {
+            if (data.data.price > 100) {
               baseRating += 0.2;
             }
             
