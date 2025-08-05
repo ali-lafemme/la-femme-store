@@ -241,7 +241,7 @@ export default function ProductDetailPage() {
             <ol className="flex items-center space-x-2 text-sm text-gray-500">
               <li><Link href="/" className="hover:text-pink-500">الرئيسية</Link></li>
               <li>/</li>
-              <li><a href={`/${product.category.name.toLowerCase()}`} className="hover:text-pink-500">{product.category.name}</a></li>
+              <li><a href={`/${product.category?.name?.toLowerCase() || 'products'}`} className="hover:text-pink-500">{product.category?.name || 'المنتجات'}</a></li>
               <li>/</li>
               <li className="text-gray-900">{product.name}</li>
             </ol>
@@ -292,7 +292,7 @@ export default function ProductDetailPage() {
                 {product.brand && (
                   <p className="text-sm text-gray-500">العلامة التجارية: {product.brand}</p>
                 )}
-                <p className="text-sm text-gray-500">الفئة: {product.category.name}</p>
+                <p className="text-sm text-gray-500">الفئة: {product.category?.name || 'غير محدد'}</p>
               </div>
 
               {/* Product Name */}
