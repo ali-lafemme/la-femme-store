@@ -84,6 +84,7 @@ jspm_packages/
 
 # Prisma
 prisma/migrations/
+prisma/generated/
 
 # IDE
 .vscode/
