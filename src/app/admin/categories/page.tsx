@@ -1,18 +1,46 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { getCategories, Category } from '@/lib/api';
 import AdminHeader from '@/components/admin/AdminHeader';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import CategoriesTable from '@/components/admin/CategoriesTable';
 import AddCategoryButton from '@/components/admin/AddCategoryButton';
 
-export default async function AdminCategories() {
-  let categories: Category[] = [];
-  
-  try {
-    const categoriesResponse = await getCategories();
-    categories = categoriesResponse.success ? categoriesResponse.data : [];
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    categories = [];
+export default function AdminCategories() {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesResponse = await getCategories();
+        setCategories(categoriesResponse.success ? categoriesResponse.data : []);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setCategories([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <AdminHeader />
+        <div className="flex">
+          <AdminSidebar />
+          <main className="flex-1 p-6">
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -1,11 +1,46 @@
-import { getOrders } from '@/lib/api';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { getOrders, Order } from '@/lib/api';
 import AdminHeader from '@/components/admin/AdminHeader';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import OrdersTable from '@/components/admin/OrdersTable';
 
-export default async function AdminOrders() {
-  const ordersResponse = await getOrders({ limit: 50 });
-  const orders = ordersResponse.success ? ordersResponse.data : [];
+export default function AdminOrders() {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const ordersResponse = await getOrders({ limit: 50 });
+        setOrders(ordersResponse.success ? ordersResponse.data : []);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        setOrders([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <AdminHeader />
+        <div className="flex">
+          <AdminSidebar />
+          <main className="flex-1 p-6">
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

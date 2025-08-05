@@ -1,18 +1,45 @@
-import { getCustomers } from '@/lib/api';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { getCustomers, Customer } from '@/lib/api';
 import AdminHeader from '@/components/admin/AdminHeader';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import CustomersTable from '@/components/admin/CustomersTable';
-import { Customer } from '@/lib/api';
 
-export default async function AdminCustomers() {
-  let customers: Customer[] = [];
-  
-  try {
-    const customersResponse = await getCustomers({ limit: 50 });
-    customers = customersResponse.success ? customersResponse.data : [];
-  } catch (error) {
-    console.error('Error fetching customers:', error);
-    // في حالة الخطأ، نستخدم مصفوفة فارغة
+export default function AdminCustomers() {
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const customersResponse = await getCustomers({ limit: 50 });
+        setCustomers(customersResponse.success ? customersResponse.data : []);
+      } catch (error) {
+        console.error('Error fetching customers:', error);
+        setCustomers([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCustomers();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <AdminHeader />
+        <div className="flex">
+          <AdminSidebar />
+          <main className="flex-1 p-6">
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
   }
 
   return (
