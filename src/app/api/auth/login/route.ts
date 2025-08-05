@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     // البحث عن الأدمن في قاعدة البيانات
-    const admin = await (prisma as any).admins.findUnique({
+    const admin = await prisma.admin.findUnique({
       where: { username },
     });
 
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     // تحديث آخر تسجيل دخول
-    await (prisma as any).admins.update({
+    await prisma.admin.update({
       where: { id: admin.id },
       data: { lastLogin: new Date() },
     });
