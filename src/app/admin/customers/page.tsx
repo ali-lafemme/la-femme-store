@@ -2,10 +2,18 @@ import { getCustomers } from '@/lib/api';
 import AdminHeader from '@/components/admin/AdminHeader';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import CustomersTable from '@/components/admin/CustomersTable';
+import { Customer } from '@/lib/api';
 
 export default async function AdminCustomers() {
-  const customersResponse = await getCustomers({ limit: 50 });
-  const customers = customersResponse.success ? customersResponse.data : [];
+  let customers: Customer[] = [];
+  
+  try {
+    const customersResponse = await getCustomers({ limit: 50 });
+    customers = customersResponse.success ? customersResponse.data : [];
+  } catch (error) {
+    console.error('Error fetching customers:', error);
+    // في حالة الخطأ، نستخدم مصفوفة فارغة
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
