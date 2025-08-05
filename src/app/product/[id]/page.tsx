@@ -325,27 +325,27 @@ export default function ProductDetailPage() {
                 {hasDiscount ? (
                   <div className="flex items-center space-x-3">
                     <span className="text-3xl font-bold text-pink-600">
-                      {product.price.toFixed(2)} دينار ليبي
+                      {(product.price || 0).toFixed(2)} دينار ليبي
                     </span>
                     <span className="text-lg text-gray-400 line-through">
-                      {product.originalPrice?.toFixed(2)} دينار ليبي
+                      {(product.originalPrice || 0).toFixed(2)} دينار ليبي
                     </span>
                     <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm font-medium">
-                      خصم {Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)}%
+                      خصم {Math.round((((product.originalPrice || 0) - (product.price || 0)) / (product.originalPrice || 1)) * 100)}%
                     </span>
                   </div>
                 ) : (
                   <span className="text-3xl font-bold text-gray-900">
-                    {product.price.toFixed(2)} دينار ليبي
+                    {(product.price || 0).toFixed(2)} دينار ليبي
                   </span>
                 )}
               </div>
 
               {/* Stock Status */}
               <div className="space-y-2">
-                {product.stock > 0 ? (
+                {(product.stock || 0) > 0 ? (
                   <p className="text-green-600 font-medium">
-                    متوفر ({product.stock} قطعة)
+                    متوفر ({(product.stock || 0)} قطعة)
                   </p>
                 ) : (
                   <p className="text-red-600 font-medium">نفذ المخزون</p>
@@ -375,14 +375,14 @@ export default function ProductDetailPage() {
 
                 <button
                   onClick={handleAddToCart}
-                  disabled={product.stock === 0}
+                  disabled={(product.stock || 0) === 0}
                   className={`w-full py-3 px-6 rounded-lg font-medium transition-colors ${
-                    product.stock > 0
+                    (product.stock || 0) > 0
                       ? 'bg-pink-600 text-white hover:bg-pink-700'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   }`}
                 >
-                  {product.stock > 0 ? 'أضف إلى السلة' : 'نفذ المخزون'}
+                  {(product.stock || 0) > 0 ? 'أضف إلى السلة' : 'نفذ المخزون'}
                 </button>
               </div>
 
