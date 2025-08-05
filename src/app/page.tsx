@@ -1,19 +1,51 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import HeroSlider from '@/components/HeroSlider';
 import OffersSection from '@/components/OffersSection';
-import { getHomepageProducts } from '@/lib/api';
+import { getHomepageProducts, Product } from '@/lib/api';
 
-export default async function Home() {
-  // جلب المنتجات المميزة من قاعدة البيانات
-  const bestSellersResponse = await getHomepageProducts('best-sellers');
-  const newProductsResponse = await getHomepageProducts('new-products');
-  
-  // استخدام البيانات من homepage-products (الاختيار اليدوي من الأدمن)
-  const bestSellers = bestSellersResponse.success ? bestSellersResponse.data.map(item => item.product) : [];
-  
-  const newProducts = newProductsResponse.success ? newProductsResponse.data.map(item => item.product) : [];
+export default function Home() {
+  const [bestSellers, setBestSellers] = useState<Product[]>([]);
+  const [newProducts, setNewProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHomepageProducts = async () => {
+      try {
+        const [bestSellersResponse, newProductsResponse] = await Promise.all([
+          getHomepageProducts('best-sellers'),
+          getHomepageProducts('new-products')
+        ]);
+        
+        setBestSellers(bestSellersResponse.success ? bestSellersResponse.data.map(item => item.product) : []);
+        setNewProducts(newProductsResponse.success ? newProductsResponse.data.map(item => item.product) : []);
+      } catch (error) {
+        console.error('Error fetching homepage products:', error);
+        setBestSellers([]);
+        setNewProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHomepageProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen">
+        <Header />
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+        </div>
+        <Footer />
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen">
