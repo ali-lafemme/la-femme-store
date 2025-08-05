@@ -1,15 +1,54 @@
-import { getProducts, getCategories } from '@/lib/api';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { getProducts, getCategories, Product, Category } from '@/lib/api';
 import AdminHeader from '@/components/admin/AdminHeader';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import ProductsTable from '@/components/admin/ProductsTable';
 import AddProductButton from '@/components/admin/AddProductButton';
 
-export default async function AdminProducts() {
-  const productsResponse = await getProducts({ limit: 100 });
-  const categoriesResponse = await getCategories();
-  
-  const products = productsResponse.success ? productsResponse.data : [];
-  const categories = categoriesResponse.success ? categoriesResponse.data : [];
+export default function AdminProducts() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [productsResponse, categoriesResponse] = await Promise.all([
+          getProducts({ limit: 100 }),
+          getCategories()
+        ]);
+        
+        setProducts(productsResponse.success ? productsResponse.data : []);
+        setCategories(categoriesResponse.success ? categoriesResponse.data : []);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setProducts([]);
+        setCategories([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <AdminHeader />
+        <div className="flex">
+          <AdminSidebar />
+          <main className="flex-1 p-6">
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cairo, Tajawal } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/contexts/CartContext";
@@ -20,7 +20,11 @@ export const metadata: Metadata = {
   description: "متجر La Femme الإلكتروني للمكياج والعناية بالبشرة والشعر والأظافر. منتجات عالية الجودة بأسعار منافسة",
   keywords: "مكياج, عناية بالبشرة, شعر, أظافر, تجميل, La Femme",
   authors: [{ name: "La Femme" }],
-  viewport: "width=device-width, initial-scale=1",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
