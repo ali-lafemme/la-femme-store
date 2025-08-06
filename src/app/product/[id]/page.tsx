@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { StarIcon } from '@heroicons/react/24/solid';
@@ -14,6 +14,7 @@ import { Product } from '@/lib/api';
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const productId = params.id as string;
   const { addItem } = useCart();
   
@@ -27,6 +28,17 @@ export default function ProductDetailPage() {
   const [reviewCount, setReviewCount] = useState(0);
   const [userRating, setUserRating] = useState(0);
   const [hasUserRated, setHasUserRated] = useState(false);
+  const [showStickyButton, setShowStickyButton] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setShowStickyButton(scrollY > 300); // إظهار الزر بعد التمرير 300px
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -112,14 +124,19 @@ export default function ProductDetailPage() {
   }, [productId]);
 
   const handleAddToCart = () => {
-    if (!product) return;
-    
-    // إضافة المنتج للكمية المحددة
-    for (let i = 0; i < quantity; i++) {
+    if (product) {
       addItem(product);
+      alert('تم إضافة المنتج إلى السلة!');
     }
-    
-    alert('تم إضافة المنتج إلى السلة بنجاح!');
+  };
+
+  const handleBuyNow = () => {
+    if (product) {
+      // إضافة المنتج إلى السلة
+      addItem(product);
+      // الانتقال مباشرة إلى صفحة الشراء
+      router.push('/checkout');
+    }
   };
 
   const handleStarClick = (rating: number) => {
@@ -373,17 +390,34 @@ export default function ProductDetailPage() {
                   </div>
                 </div>
 
-                <button
-                  onClick={handleAddToCart}
-                  disabled={(product.stock || 0) === 0}
-                  className={`w-full py-3 px-6 rounded-lg font-medium transition-colors ${
-                    (product.stock || 0) > 0
-                      ? 'bg-pink-600 text-white hover:bg-pink-700'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
-                >
-                  {(product.stock || 0) > 0 ? 'أضف إلى السلة' : 'نفذ المخزون'}
-                </button>
+                {/* أزرار الشراء */}
+                <div className="space-y-3">
+                  {/* زر اشتري الآن */}
+                  <button
+                    onClick={handleBuyNow}
+                    disabled={(product.stock || 0) === 0}
+                    className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 ${
+                      (product.stock || 0) > 0
+                        ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white hover:from-pink-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
+                    {(product.stock || 0) > 0 ? 'اشتري الآن' : 'نفذ المخزون'}
+                  </button>
+
+                  {/* زر أضف إلى السلة */}
+                  <button
+                    onClick={handleAddToCart}
+                    disabled={(product.stock || 0) === 0}
+                    className={`w-full py-3 px-6 rounded-lg font-medium transition-colors ${
+                      (product.stock || 0) > 0
+                        ? 'bg-white border-2 border-pink-600 text-pink-600 hover:bg-pink-50'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
+                    {(product.stock || 0) > 0 ? 'أضف إلى السلة' : 'نفذ المخزون'}
+                  </button>
+                </div>
               </div>
 
               {/* Product Details */}
@@ -434,6 +468,45 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Sticky Buy Now Button */}
+      {showStickyButton && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg transform transition-all duration-300 animate-bounce">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4 space-x-reverse">
+                <div className="w-12 h-12 rounded-lg overflow-hidden">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={48}
+                    height={48}
+                    className="object-cover"
+                  />
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-900">{product.name}</h3>
+                  <p className="text-lg font-bold text-pink-600">
+                    {(product.price || 0).toFixed(2)} دينار ليبي
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleBuyNow}
+                disabled={(product.stock || 0) === 0}
+                className={`px-8 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 ${
+                  (product.stock || 0) > 0
+                    ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white hover:from-pink-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                {(product.stock || 0) > 0 ? 'اشتري الآن' : 'نفذ المخزون'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
