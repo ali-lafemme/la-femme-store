@@ -60,7 +60,9 @@ const CheckoutPage = () => {
         totalAmount: state.total,
       };
 
+      console.log('Submitting order data:', orderData);
       const response = await submitOrder(orderData);
+      console.log('Order response:', response);
 
       if (response.success) {
         // تفريغ السلة
@@ -69,11 +71,16 @@ const CheckoutPage = () => {
         // الانتقال إلى صفحة تأكيد الطلب مع رقم الطلب
         router.push(`/checkout/success?orderId=${response.data.id}`);
       } else {
+        console.error('Order submission failed:', response.error);
         alert(`خطأ: ${response.error}`);
       }
       
     } catch (error) {
       console.error('Error submitting order:', error);
+      console.error('Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : 'No stack trace'
+      });
       alert('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
     } finally {
       setIsSubmitting(false);
