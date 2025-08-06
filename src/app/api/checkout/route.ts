@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       user = await (prisma as any).user.create({
         data: {
           name: customerName,
-          email: customerEmail || null,
+          email: customerEmail || `${phone}@lafemme.com`, // استخدام رقم الهاتف كـ email إذا لم يكن موجود
           phone,
           address: shippingAddress,
           role: 'CUSTOMER',
