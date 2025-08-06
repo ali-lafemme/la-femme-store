@@ -58,7 +58,7 @@ const RecentProducts = ({ products }: RecentProductsProps) => {
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-red-100 text-red-800'
                   }`}>
-                    {product.stock > 0 ? `متوفر (${product.stock})` : 'نفذ المخزون'}
+                    {product.stock > 0 ? 'متوفر' : 'غير متوفر'}
                   </span>
                 </div>
               </div>
