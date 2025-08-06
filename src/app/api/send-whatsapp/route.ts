@@ -15,11 +15,19 @@ export async function POST(request: NextRequest) {
     // تنظيف رقم الهاتف
     const cleanPhone = phoneNumber.replace(/\D/g, '');
     
+    // التحقق من صحة رقم الهاتف
+    if (cleanPhone.length < 10) {
+      return NextResponse.json(
+        { success: false, error: 'رقم الهاتف غير صحيح' },
+        { status: 400 }
+      );
+    }
+    
     // إنشاء رابط الواتساب
     const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
     
-    console.log('WhatsApp URL:', whatsappUrl);
-    console.log('Message:', message);
+    console.log('WhatsApp URL created:', whatsappUrl);
+    console.log('Message length:', message.length);
     console.log('Phone:', cleanPhone);
 
     // في بيئة الإنتاج، يمكن استخدام خدمات مثل:

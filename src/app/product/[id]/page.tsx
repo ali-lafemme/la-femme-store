@@ -251,12 +251,12 @@ export default function ProductDetailPage() {
             {/* Product Images */}
             <div className="space-y-4">
               {/* Main Image */}
-              <div className="relative aspect-square bg-white rounded-lg overflow-hidden shadow-lg">
+              <div className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden shadow-lg">
                 <Image
                   src={images[selectedImage] || product.image}
                   alt={product.name}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                 />
               </div>
 

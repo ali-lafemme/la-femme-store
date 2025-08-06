@@ -17,9 +17,13 @@ export async function sendWhatsAppNotification(message: string, phoneNumber: str
       console.log('WhatsApp notification sent successfully');
       console.log('WhatsApp URL:', result.url);
       
-      // فتح رابط الواتساب في نافذة جديدة
-      if (typeof window !== 'undefined') {
-        window.open(result.url, '_blank');
+      // فتح رابط الواتساب في نافذة جديدة فقط في Client-Side
+      if (typeof window !== 'undefined' && typeof window.open === 'function') {
+        try {
+          window.open(result.url, '_blank');
+        } catch (error) {
+          console.log('Could not open WhatsApp URL in new window:', error);
+        }
       }
       
       return { success: true, url: result.url };

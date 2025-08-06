@@ -127,19 +127,24 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // إرسال إشعار الواتساب
-    const orderForNotification = {
-      ...order,
-      notes: order.notes || undefined,
-      createdAt: order.createdAt.toISOString()
-    };
-    const notificationMessage = createOrderNotification(orderForNotification);
-    const whatsappResult = await sendWhatsAppNotification(notificationMessage);
-    
-    if (whatsappResult.success) {
-      console.log('WhatsApp notification sent successfully');
-    } else {
-      console.error('Failed to send WhatsApp notification:', whatsappResult.error);
+    // إرسال إشعار الواتساب (مع معالجة الأخطاء)
+    try {
+      const orderForNotification = {
+        ...order,
+        notes: order.notes || undefined,
+        createdAt: order.createdAt.toISOString()
+      };
+      const notificationMessage = createOrderNotification(orderForNotification);
+      const whatsappResult = await sendWhatsAppNotification(notificationMessage);
+      
+      if (whatsappResult.success) {
+        console.log('WhatsApp notification sent successfully');
+      } else {
+        console.error('Failed to send WhatsApp notification:', whatsappResult.error);
+      }
+    } catch (whatsappError) {
+      console.error('Error in WhatsApp notification:', whatsappError);
+      // لا نوقف العملية إذا فشل الواتساب
     }
 
     return NextResponse.json({
