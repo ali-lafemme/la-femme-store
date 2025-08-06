@@ -102,10 +102,10 @@ const CategoryHero = ({ categoryName, title, subtitle, gradientColors = "from-pi
             {subtitle}
           </p>
           
-          {/* Category Description (Desktop) */}
+          {/* Category Description */}
           {category?.description && (
-            <div className="hidden md:block mt-6 lg:mt-8">
-              <p className="text-sm lg:text-base opacity-80 max-w-2xl mx-auto leading-relaxed">
+            <div className="mt-4 md:mt-6 lg:mt-8">
+              <p className="text-sm md:text-base lg:text-lg opacity-80 max-w-2xl mx-auto leading-relaxed px-4">
                 {category.description}
               </p>
             </div>
