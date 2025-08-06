@@ -89,16 +89,16 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
         notes: order.notes || undefined
       });
       
-      // إنشاء رابط الواتساب
+      // إنشاء رابط الواتساب مع الرسالة جاهزة
       const whatsappUrl = `https://wa.me/381615851106?text=${encodeURIComponent(message)}`;
       
       // فتح الواتساب في نافذة جديدة
       window.open(whatsappUrl, '_blank');
       
-      alert('تم فتح الواتساب! يرجى إرسال الرسالة يدوياً.\n\nلإرسال أوتوماتيكي، تحتاج إلى إعداد WhatsApp Business API.');
+      alert('تم فتح الواتساب مع الرسالة جاهزة! فقط اضغط إرسال.');
       
     } catch (error) {
-      console.error('Error sending WhatsApp:', error);
+      console.error('Error opening WhatsApp:', error);
       alert('حدث خطأ أثناء فتح الواتساب');
     } finally {
       setIsLoading(false);

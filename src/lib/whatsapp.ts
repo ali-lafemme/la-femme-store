@@ -4,47 +4,24 @@ export async function sendWhatsAppNotification(message: string, phoneNumber: str
     // تنظيف رقم الهاتف
     const cleanPhone = phoneNumber.replace(/\D/g, '');
     
-    // إرسال الرسالة عبر API
-    const response = await fetch('/api/send-whatsapp', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, phoneNumber: cleanPhone })
-    });
+    // إنشاء رابط الواتساب مع الرسالة جاهزة
+    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
     
-    const result = await response.json();
+    console.log('WhatsApp URL created:', whatsappUrl);
     
-    if (result.success) {
-      console.log('WhatsApp notification sent successfully');
-      console.log('WhatsApp URL:', result.url);
-      
-      // محاولة فتح الواتساب أوتوماتيكياً
-      if (typeof window !== 'undefined') {
-        try {
-          // إنشاء iframe مخفي لفتح الواتساب
-          const iframe = document.createElement('iframe');
-          iframe.style.display = 'none';
-          iframe.src = result.url;
-          document.body.appendChild(iframe);
-          
-          // إزالة iframe بعد ثانية
-          setTimeout(() => {
-            if (document.body.contains(iframe)) {
-              document.body.removeChild(iframe);
-            }
-          }, 1000);
-        } catch (error) {
-          console.log('Could not auto-open WhatsApp:', error);
-        }
+    // فتح الواتساب في نافذة جديدة
+    if (typeof window !== 'undefined') {
+      try {
+        window.open(whatsappUrl, '_blank');
+      } catch (error) {
+        console.log('Could not open WhatsApp:', error);
       }
-      
-      return { success: true, url: result.url };
-    } else {
-      console.error('Failed to send WhatsApp notification:', result.error);
-      return { success: false, error: result.error };
     }
+    
+    return { success: true, url: whatsappUrl };
   } catch (error) {
-    console.error('Error sending WhatsApp notification:', error);
-    return { success: false, error: 'فشل في إرسال إشعار الواتساب' };
+    console.error('Error creating WhatsApp URL:', error);
+    return { success: false, error: 'فشل في إنشاء رابط الواتساب' };
   }
 }
 
