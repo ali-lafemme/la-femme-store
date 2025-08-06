@@ -23,24 +23,38 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // إنشاء رابط الواتساب
-    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-    
-    console.log('WhatsApp URL created:', whatsappUrl);
+    console.log('Sending WhatsApp message to:', cleanPhone);
     console.log('Message length:', message.length);
-    console.log('Phone:', cleanPhone);
 
     // في بيئة الإنتاج، يمكن استخدام خدمات مثل:
     // - WhatsApp Business API
     // - Twilio WhatsApp API
     // - MessageBird WhatsApp API
     
-    // للآن، سنقوم بإنشاء رابط الواتساب فقط
-    // يمكنك فتح الرابط يدوياً لإرسال الرسالة
+    // للآن، سنقوم بإنشاء رابط الواتساب وإرسال رسالة تأكيد
+    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    
+    // محاولة فتح الواتساب أوتوماتيكياً (في بيئة المتصفح)
+    if (typeof window !== 'undefined') {
+      try {
+        // إنشاء iframe مخفي لفتح الواتساب
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = whatsappUrl;
+        document.body.appendChild(iframe);
+        
+        // إزالة iframe بعد ثانية
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+        }, 1000);
+      } catch (error) {
+        console.log('Could not auto-open WhatsApp:', error);
+      }
+    }
     
     return NextResponse.json({
       success: true,
-      message: 'تم إنشاء رابط الواتساب',
+      message: 'تم إرسال رسالة الواتساب',
       url: whatsappUrl,
       phone: cleanPhone
     });

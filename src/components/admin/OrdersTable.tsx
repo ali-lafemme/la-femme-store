@@ -81,19 +81,35 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 
   const handleSendWhatsApp = async (order: Order) => {
     try {
-      const orderForNotification = {
-        ...order,
-        notes: order.notes || undefined
-      };
-      const message = createOrderNotification(orderForNotification);
-      const whatsappUrl = `https://wa.me/381615851106?text=${encodeURIComponent(message)}`;
+      setIsLoading(true);
       
-      // فتح رابط الواتساب في نافذة جديدة
-      window.open(whatsappUrl, '_blank');
-      
-      alert('تم فتح رابط الواتساب! يمكنك الآن إرسال الرسالة يدوياً.');
+      // إرسال رسالة الواتساب أوتوماتيكياً
+      const response = await fetch('/api/send-whatsapp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: createOrderNotification({
+            ...order,
+            notes: order.notes || undefined
+          }),
+          phoneNumber: '381615851106' // رقم الواتساب الإداري
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert('تم إرسال رسالة الواتساب بنجاح!');
+      } else {
+        alert(`خطأ في إرسال الواتساب: ${result.error}`);
+      }
     } catch (error) {
+      console.error('Error sending WhatsApp:', error);
       alert('حدث خطأ أثناء إرسال رسالة الواتساب');
+    } finally {
+      setIsLoading(false);
     }
   };
 

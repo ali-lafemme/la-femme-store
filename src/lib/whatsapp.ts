@@ -17,12 +17,23 @@ export async function sendWhatsAppNotification(message: string, phoneNumber: str
       console.log('WhatsApp notification sent successfully');
       console.log('WhatsApp URL:', result.url);
       
-      // فتح رابط الواتساب في نافذة جديدة فقط في Client-Side
-      if (typeof window !== 'undefined' && typeof window.open === 'function') {
+      // محاولة فتح الواتساب أوتوماتيكياً
+      if (typeof window !== 'undefined') {
         try {
-          window.open(result.url, '_blank');
+          // إنشاء iframe مخفي لفتح الواتساب
+          const iframe = document.createElement('iframe');
+          iframe.style.display = 'none';
+          iframe.src = result.url;
+          document.body.appendChild(iframe);
+          
+          // إزالة iframe بعد ثانية
+          setTimeout(() => {
+            if (document.body.contains(iframe)) {
+              document.body.removeChild(iframe);
+            }
+          }, 1000);
         } catch (error) {
-          console.log('Could not open WhatsApp URL in new window:', error);
+          console.log('Could not auto-open WhatsApp:', error);
         }
       }
       
