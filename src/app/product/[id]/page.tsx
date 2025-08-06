@@ -29,6 +29,7 @@ export default function ProductDetailPage() {
   const [userRating, setUserRating] = useState(0);
   const [hasUserRated, setHasUserRated] = useState(false);
   const [showStickyButton, setShowStickyButton] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -124,9 +125,14 @@ export default function ProductDetailPage() {
   }, [productId]);
 
   const handleAddToCart = () => {
-    if (product) {
+    if (product && (product.stock || 0) > 0) {
+      setIsAdding(true);
       addItem(product);
-      alert('تم إضافة المنتج إلى السلة!');
+      
+      // إظهار حالة النجاح لمدة ثانية واحدة
+      setTimeout(() => {
+        setIsAdding(false);
+      }, 1000);
     }
   };
 
@@ -409,13 +415,20 @@ export default function ProductDetailPage() {
                   <button
                     onClick={handleAddToCart}
                     disabled={(product.stock || 0) === 0}
-                    className={`w-full py-3 px-6 rounded-lg font-medium transition-colors ${
-                      (product.stock || 0) > 0
+                    className={`w-full py-3 px-6 rounded-lg font-medium transition-all duration-300 ${
+                      isAdding
+                        ? 'bg-green-500 text-white border-2 border-green-500'
+                        : (product.stock || 0) > 0
                         ? 'bg-white border-2 border-pink-600 text-pink-600 hover:bg-pink-50'
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     }`}
                   >
-                    {(product.stock || 0) > 0 ? 'أضف إلى السلة' : 'نفذ المخزون'}
+                    {isAdding 
+                      ? 'تم الإضافة! ✓' 
+                      : (product.stock || 0) > 0 
+                        ? 'أضف إلى السلة' 
+                        : 'نفذ المخزون'
+                    }
                   </button>
                 </div>
               </div>
