@@ -84,7 +84,7 @@ export default function BeautyDevicesPage() {
       <CategoryHero 
         categoryName="الأجهزة الجمالية"
         title="الأجهزة الجمالية"
-        subtitle="اكتشفي أحدث الأجهزة التجميلية للعناية بجمالك في المنزل"
+
         gradientColors="from-orange-400 to-amber-500"
       />
 

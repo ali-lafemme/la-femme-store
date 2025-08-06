@@ -84,7 +84,7 @@ export default function NailsPage() {
       <CategoryHero 
         categoryName="الأظافر"
         title="الأظافر"
-        subtitle="اكتشفي مجموعة رائعة من منتجات الأظافر عالية الجودة"
+
         gradientColors="from-purple-400 to-pink-500"
       />
 

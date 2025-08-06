@@ -84,7 +84,7 @@ export default function BagsPage() {
       <CategoryHero 
         categoryName="حقائب"
         title="حقائب"
-        subtitle="اكتشفي مجموعة رائعة من الحقائب الأنيقة والأنيقة"
+
         gradientColors="from-rose-400 to-pink-500"
       />
 

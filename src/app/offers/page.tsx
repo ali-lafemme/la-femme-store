@@ -75,7 +75,7 @@ export default function OffersPage() {
       <CategoryHero 
         categoryName="العروض"
         title="العروض والخصومات"
-        subtitle="اكتشفي أفضل العروض والخصومات على منتجاتنا المميزة"
+
         gradientColors="from-red-400 to-orange-500"
       />
 

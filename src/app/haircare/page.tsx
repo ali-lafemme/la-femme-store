@@ -84,7 +84,7 @@ export default function HaircarePage() {
       <CategoryHero 
         categoryName="العناية بالشعر"
         title="العناية بالشعر"
-        subtitle="اكتشفي مجموعة رائعة من منتجات العناية بالشعر عالية الجودة"
+
         gradientColors="from-amber-400 to-orange-500"
       />
 

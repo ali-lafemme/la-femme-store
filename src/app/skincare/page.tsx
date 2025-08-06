@@ -84,7 +84,7 @@ export default function SkincarePage() {
       <CategoryHero 
         categoryName="العناية بالبشرة"
         title="العناية بالبشرة"
-        subtitle="اكتشفي مجموعة رائعة من منتجات العناية بالبشرة عالية الجودة"
+
         gradientColors="from-blue-400 to-teal-500"
       />
 

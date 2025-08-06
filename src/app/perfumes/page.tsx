@@ -84,7 +84,7 @@ export default function PerfumesPage() {
       <CategoryHero 
         categoryName="العطور"
         title="العطور"
-        subtitle="اكتشفي مجموعة رائعة من العطور الفاخرة والأنيقة"
+
         gradientColors="from-emerald-400 to-teal-500"
       />
 

@@ -6,11 +6,10 @@ import { Category } from '@/lib/api';
 interface CategoryHeroProps {
   categoryName: string;
   title: string;
-  subtitle: string;
   gradientColors?: string;
 }
 
-const CategoryHero = ({ categoryName, title, subtitle, gradientColors = "from-pink-400 to-purple-500" }: CategoryHeroProps) => {
+const CategoryHero = ({ categoryName, title, gradientColors = "from-pink-400 to-purple-500" }: CategoryHeroProps) => {
   const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -97,10 +96,7 @@ const CategoryHero = ({ categoryName, title, subtitle, gradientColors = "from-pi
             {title}
           </h1>
           
-          {/* Subtitle */}
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl opacity-90 px-2 md:px-4 lg:px-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            {subtitle}
-          </p>
+
           
           {/* Category Description */}
           {category?.description && (

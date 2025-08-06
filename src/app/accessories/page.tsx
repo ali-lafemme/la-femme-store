@@ -81,7 +81,7 @@ export default function AccessoriesPage() {
       <CategoryHero 
         categoryName="اكسسورات"
         title="اكسسورات"
-        subtitle="اكتشفي مجموعة رائعة من الإكسسوارات الأنيقة والمميزة"
+
         gradientColors="from-indigo-400 to-purple-500"
       />
 

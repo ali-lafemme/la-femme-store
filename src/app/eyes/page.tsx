@@ -84,7 +84,7 @@ export default function EyesPage() {
       <CategoryHero 
         categoryName="العيون"
         title="العيون"
-        subtitle="اكتشفي مجموعة رائعة من منتجات العيون والرموش"
+
         gradientColors="from-violet-400 to-purple-500"
       />
 

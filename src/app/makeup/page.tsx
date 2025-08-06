@@ -89,7 +89,6 @@ export default function MakeupPage() {
       <CategoryHero 
         categoryName="المكياج"
         title="المكياج"
-        subtitle="اكتشفي مجموعة رائعة من منتجات المكياج عالية الجودة"
         gradientColors="from-pink-400 to-purple-500"
       />
 
