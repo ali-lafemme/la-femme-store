@@ -51,7 +51,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-48 sm:h-56 md:h-64 object-cover group-hover:scale-110 transition-transform duration-300 cursor-pointer"
+            className="w-full h-48 sm:h-56 md:h-64 object-contain bg-gray-50 group-hover:scale-105 transition-transform duration-300 cursor-pointer"
           />
         </a>
         
