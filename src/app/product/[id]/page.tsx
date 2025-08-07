@@ -533,22 +533,20 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Buy Now Button - Bottom */}
-      {product && (
-        <div className="mt-8 animate-pulse">
-          <button
-            onClick={handleBuyNow}
-            disabled={(product?.stock || 0) === 0}
-            className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl ${
-              (product?.stock || 0) > 0
-                ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white hover:from-pink-700 hover:to-purple-700'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-          >
-            {(product?.stock || 0) > 0 ? 'اشتري الآن' : 'نفذ المخزون'}
-          </button>
-        </div>
-      )}
+      {/* Sticky Buy Now Button - Top */}
+      <div className="fixed top-4 left-4 right-4 z-50 animate-pulse">
+        <button
+          onClick={handleBuyNow}
+          disabled={!product || (product?.stock || 0) === 0}
+          className={`w-full py-3 px-6 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl ${
+            product && (product?.stock || 0) > 0
+              ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white hover:from-pink-700 hover:to-purple-700'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+        >
+          {product && (product?.stock || 0) > 0 ? 'اشتري الآن' : 'تحميل...'}
+        </button>
+      </div>
     </div>
   );
 } 
