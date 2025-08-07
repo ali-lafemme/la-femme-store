@@ -240,10 +240,6 @@ function ContactPage() {
               <h3 className="font-semibold text-gray-900 mb-2">كم تستغرق مدة التوصيل؟</h3>
               <p className="text-gray-600">تستغرق مدة التوصيل من 1-3 أيام عمل حسب المنطقة</p>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h3 className="font-semibold text-gray-900 mb-2">هل يمكن إرجاع المنتج؟</h3>
-              <p className="text-gray-600">نعم، يمكن إرجاع المنتج خلال 7 أيام من تاريخ الاستلام</p>
-            </div>
           </div>
         </div>
       </div>
