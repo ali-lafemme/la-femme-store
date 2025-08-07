@@ -242,39 +242,91 @@ export default function ProductDetailPage() {
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Product Images */}
+            {/* Product Images Slider */}
             <div className="space-y-4">
-              {/* Main Image */}
-              <div className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden shadow-lg">
+              {/* Main Image with Navigation */}
+              <div className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden shadow-lg group">
                 <Image
                   src={images[selectedImage] || product.image}
                   alt={product.name}
                   fill
                   className="object-contain"
                 />
+                
+                {/* Navigation Buttons */}
+                {images.length > 1 && (
+                  <>
+                    {/* Previous Button */}
+                    <button
+                      onClick={() => setSelectedImage(selectedImage === 0 ? images.length - 1 : selectedImage - 1)}
+                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      aria-label="الصورة السابقة"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    
+                    {/* Next Button */}
+                    <button
+                      onClick={() => setSelectedImage(selectedImage === images.length - 1 ? 0 : selectedImage + 1)}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      aria-label="الصورة التالية"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </>
+                )}
+                
+                {/* Image Counter */}
+                {images.length > 1 && (
+                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                    {selectedImage + 1} / {images.length}
+                  </div>
+                )}
               </div>
 
-              {/* Thumbnail Images */}
+              {/* Thumbnail Images with Scroll */}
               {images.length > 1 && (
-                <div className="grid grid-cols-5 gap-2">
-                  {images.map((image: string, index: number) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                        selectedImage === index 
-                          ? 'border-pink-500 shadow-lg' 
-                          : 'border-gray-200 hover:border-pink-300'
-                      }`}
-                    >
-                      <Image
-                        src={image}
-                        alt={`${product.name} - صورة ${index + 1}`}
-                        fill
-                        className="object-cover"
-                      />
-                    </button>
-                  ))}
+                <div className="relative">
+                  <div className="flex space-x-2 overflow-x-auto scrollbar-hide pb-2">
+                    {images.map((image: string, index: number) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImage(index)}
+                        className={`relative flex-shrink-0 aspect-square w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                          selectedImage === index 
+                            ? 'border-pink-500 shadow-lg' 
+                            : 'border-gray-200 hover:border-pink-300'
+                        }`}
+                      >
+                        <Image
+                          src={image}
+                          alt={`${product.name} - صورة ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {/* Scroll Indicators */}
+                  {images.length > 5 && (
+                    <div className="flex justify-center space-x-1 mt-2">
+                      {Array.from({ length: Math.ceil(images.length / 5) }).map((_, index) => (
+                        <div
+                          key={index}
+                          className={`w-2 h-2 rounded-full ${
+                            Math.floor(selectedImage / 5) === index 
+                              ? 'bg-pink-500' 
+                              : 'bg-gray-300'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
