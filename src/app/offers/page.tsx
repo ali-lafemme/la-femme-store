@@ -138,22 +138,6 @@ export default function OffersPage() {
           </div>
         )}
 
-        {/* Pagination */}
-        {filteredProducts.length > 0 && (
-          <div className="flex justify-center mt-6 md:mt-8">
-            <nav className="flex items-center space-x-1 md:space-x-2 space-x-reverse">
-              <button className="px-2 py-1 md:px-3 md:py-2 text-xs md:text-sm text-gray-500 hover:text-red-500 transition-colors">
-                السابق
-              </button>
-              <button className="px-2 py-1 md:px-3 md:py-2 bg-red-500 text-white rounded-lg text-xs md:text-sm">1</button>
-              <button className="px-2 py-1 md:px-3 md:py-2 text-xs md:text-sm text-gray-500 hover:text-red-500 transition-colors">2</button>
-              <button className="px-2 py-1 md:px-3 md:py-2 text-xs md:text-sm text-gray-500 hover:text-red-500 transition-colors">3</button>
-              <button className="px-2 py-1 md:px-3 md:py-2 text-xs md:text-sm text-gray-500 hover:text-red-500 transition-colors">
-                التالي
-              </button>
-            </nav>
-          </div>
-        )}
       </div>
       
       <Footer />
