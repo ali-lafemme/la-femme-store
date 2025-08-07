@@ -339,10 +339,10 @@ export default function ProductDetailPage() {
               <div className="space-y-2">
                 {(product.stock || 0) > 0 ? (
                   <p className="text-green-600 font-medium">
-                    متوفر ({(product.stock || 0)} قطعة)
+                    متوفر
                   </p>
                 ) : (
-                  <p className="text-red-600 font-medium">نفذ المخزون</p>
+                  <p className="text-red-600 font-medium">غير متوفر</p>
                 )}
               </div>
 
