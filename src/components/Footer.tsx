@@ -31,7 +31,7 @@ const Footer = () => {
             <div className="flex items-center space-x-2 space-x-reverse mb-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12">
                 <img 
-                  src="/logo.lam.png" 
+                  src="/logo.png" 
                   alt="La Femme" 
                   className="w-full h-full object-contain"
                 />

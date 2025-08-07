@@ -31,7 +31,7 @@ const Header = () => {
             <Link href="/" className="flex items-center space-x-2 space-x-reverse group">
               <div className="w-12 h-12 lg:w-16 lg:h-16 group-hover:scale-110 transition-transform duration-200">
                 <img 
-                  src="/logo.lam.png" 
+                  src="/logo.png" 
                   alt="La Femme" 
                   className="w-full h-full object-contain"
                 />
