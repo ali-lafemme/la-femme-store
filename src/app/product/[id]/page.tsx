@@ -4,19 +4,28 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { StarIcon } from '@heroicons/react/24/solid';
-import { StarIcon as StarOutlineIcon } from '@heroicons/react/24/outline';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { useCart } from '@/contexts/CartContext';
-
 import { Product } from '@/lib/api';
+
+// Star Icons
+const StarIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 20 20">
+    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+  </svg>
+);
+
+const StarOutlineIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+  </svg>
+);
 
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const productId = params.id as string;
   const { addItem } = useCart();
+  const productId = params.id as string;
   
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,6 +39,7 @@ export default function ProductDetailPage() {
   const [hasUserRated, setHasUserRated] = useState(false);
   const [showStickyButton, setShowStickyButton] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -203,6 +213,28 @@ export default function ProductDetailPage() {
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setTouchStart(touch.clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStart) return;
+    const touch = e.changedTouches[0];
+    const diff = touchStart - touch.clientX;
+    
+    if (Math.abs(diff) > 50) { // Swipe threshold
+      if (diff > 0) {
+        // Swipe left - next image
+        setSelectedImage(selectedImage === images.length - 1 ? 0 : selectedImage + 1);
+      } else {
+        // Swipe right - previous image
+        setSelectedImage(selectedImage === 0 ? images.length - 1 : selectedImage - 1);
+      }
+    }
+    setTouchStart(null);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -245,7 +277,11 @@ export default function ProductDetailPage() {
             {/* Product Images Slider */}
             <div className="space-y-4">
               {/* Main Image with Navigation */}
-              <div className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden shadow-lg group">
+              <div 
+                className="relative aspect-square bg-gray-50 rounded-lg overflow-hidden shadow-lg group"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+              >
                 <Image
                   src={images[selectedImage] || product.image}
                   alt={product.name}
@@ -259,7 +295,7 @@ export default function ProductDetailPage() {
                     {/* Previous Button */}
                     <button
                       onClick={() => setSelectedImage(selectedImage === 0 ? images.length - 1 : selectedImage - 1)}
-                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all duration-300 md:opacity-0 md:group-hover:opacity-100"
                       aria-label="الصورة السابقة"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -270,7 +306,7 @@ export default function ProductDetailPage() {
                     {/* Next Button */}
                     <button
                       onClick={() => setSelectedImage(selectedImage === images.length - 1 ? 0 : selectedImage + 1)}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all duration-300 md:opacity-0 md:group-hover:opacity-100"
                       aria-label="الصورة التالية"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -507,43 +543,20 @@ export default function ProductDetailPage() {
 
       {/* Sticky Buy Now Button */}
       {showStickyButton && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg transform transition-all duration-300 animate-bounce">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4 space-x-reverse">
-                <div className="w-12 h-12 rounded-lg overflow-hidden">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    width={48}
-                    height={48}
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-medium text-gray-900">{product.name}</h3>
-                  <p className="text-lg font-bold text-pink-600">
-                    {(product.price || 0).toFixed(2)} دينار ليبي
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={handleBuyNow}
-                disabled={(product.stock || 0) === 0}
-                className={`px-8 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 ${
-                  (product.stock || 0) > 0
-                    ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white hover:from-pink-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                {(product.stock || 0) > 0 ? 'اشتري الآن' : 'نفذ المخزون'}
-              </button>
-            </div>
-          </div>
+        <div className="fixed bottom-4 left-4 right-4 z-50 animate-bounce">
+          <button
+            onClick={handleBuyNow}
+            disabled={(product?.stock || 0) === 0}
+            className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl ${
+              (product?.stock || 0) > 0
+                ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white hover:from-pink-700 hover:to-purple-700'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            {(product?.stock || 0) > 0 ? 'اشتري الآن' : 'نفذ المخزون'}
+          </button>
         </div>
       )}
-
-      <Footer />
     </div>
   );
 } 
