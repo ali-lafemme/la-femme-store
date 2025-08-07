@@ -22,9 +22,9 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [starRating, setStarRating] = useState(3);
+  const [starRating, setStarRating] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
-  const [dynamicRating, setDynamicRating] = useState(3); // تقييم افتراضي 3 نجوم
+  const [dynamicRating, setDynamicRating] = useState(0); // سيتم تحديثه من قاعدة البيانات
   const [reviewCount, setReviewCount] = useState(0);
   const [userRating, setUserRating] = useState(0);
   const [hasUserRated, setHasUserRated] = useState(false);
@@ -49,61 +49,12 @@ export default function ProductDetailPage() {
           const data = await response.json();
           setProduct(data.data);
           
-          // توليد تقييم ديناميكي بناءً على المبيعات والخصائص
-          const generateDynamicRating = () => {
-            // استخدام ID المنتج كبذرة لتوليد تقييم ثابت لكل منتج
-            const seed = productId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-            const random = (seed * 9301 + 49297) % 233280;
-            const normalized = random / 233280;
-            
-            let baseRating = 3; // تقييم افتراضي 3 نجوم
-            
-            // إذا كان المنتج جديد
-            if (data.data.isNew) {
-              baseRating += 0.3;
-            }
-            
-            // إذا كان من الأكثر مبيعاً
-            if (data.data.isBestSeller) {
-              baseRating += 0.5;
-            }
-            
-            // إذا كان السعر مرتفع (منتج فاخر)
-            if (data.data.price > 100) {
-              baseRating += 0.2;
-            }
-            
-            // إضافة بعض العشوائية بناءً على ID المنتج
-            const randomFactor = (normalized - 0.5) * 1.5; // -0.75 إلى 0.75
-            const finalRating = Math.max(2, Math.min(5, baseRating + randomFactor));
-            
-            return Math.round(finalRating * 10) / 10; // تقريب إلى رقم عشري واحد
-          };
+          // استخدام التقييم الحقيقي من قاعدة البيانات
+          const realRating = data.data.rating || 0;
+          const realReviewCount = data.data.reviewCount || 0;
           
-          const generateReviewCount = (rating: number) => {
-            const seed = productId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-            const random = (seed * 9301 + 49297) % 233280;
-            const normalized = random / 233280;
-            
-            let baseCount = 15; // عدد افتراضي
-            
-            // إذا كان التقييم عالي، عدد التقييمات أكثر
-            if (rating >= 4) {
-              baseCount = 30 + Math.floor(normalized * 70); // 30-100
-            } else if (rating >= 3) {
-              baseCount = 15 + Math.floor(normalized * 35); // 15-50
-            } else {
-              baseCount = 5 + Math.floor(normalized * 15); // 5-20
-            }
-            
-            return baseCount;
-          };
-          
-          const rating = generateDynamicRating();
-          const count = generateReviewCount(rating);
-          
-          setDynamicRating(rating);
-          setReviewCount(count);
+          setDynamicRating(realRating);
+          setReviewCount(realReviewCount);
         }
       } catch (error) {
         console.error('Error fetching product:', error);
@@ -145,22 +96,42 @@ export default function ProductDetailPage() {
     }
   };
 
-  const handleStarClick = (rating: number) => {
+  const handleStarClick = async (rating: number) => {
     if (!hasUserRated) {
-      setUserRating(rating);
-      setHasUserRated(true);
-      
-      // تحديث التقييم العام بناءً على تقييم المستخدم
-      const newTotalRating = (dynamicRating * reviewCount + rating) / (reviewCount + 1);
-      setDynamicRating(Math.round(newTotalRating * 10) / 10);
-      setReviewCount(reviewCount + 1);
-      
-      // حفظ التقييم في localStorage
-      const ratings = JSON.parse(localStorage.getItem('productRatings') || '{}');
-      ratings[productId] = rating;
-      localStorage.setItem('productRatings', JSON.stringify(ratings));
-      
-      alert('شكراً لك! تم تسجيل تقييمك بنجاح.');
+      try {
+        // إرسال التقييم إلى الخادم
+        const response = await fetch('/api/products/rate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            productId,
+            rating
+          })
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          
+          setUserRating(rating);
+          setHasUserRated(true);
+          setDynamicRating(result.data.rating);
+          setReviewCount(result.data.reviewCount);
+          
+          // حفظ التقييم في localStorage أيضاً
+          const ratings = JSON.parse(localStorage.getItem('productRatings') || '{}');
+          ratings[productId] = rating;
+          localStorage.setItem('productRatings', JSON.stringify(ratings));
+          
+          alert('شكراً لك! تم تسجيل تقييمك بنجاح.');
+        } else {
+          alert('فشل في تسجيل التقييم. يرجى المحاولة مرة أخرى.');
+        }
+      } catch (error) {
+        console.error('Error rating product:', error);
+        alert('فشل في تسجيل التقييم. يرجى المحاولة مرة أخرى.');
+      }
     }
   };
 

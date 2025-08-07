@@ -11,7 +11,7 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addItem } = useCart();
   const [isAdding, setIsAdding] = useState(false);
-  const [starRating, setStarRating] = useState(3); // 3 نجوم افتراضية
+  const [starRating, setStarRating] = useState(product.rating || 0); // استخدام التقييم من قاعدة البيانات
   const [isHovering, setIsHovering] = useState(false);
   
   const discountPercentage = product.originalPrice 
